@@ -14,7 +14,7 @@ public class Session {
     @Id
     @GeneratedValue
     private Long id;
-    private Date deateDebut;
+    private Date dateDebut;
     private Date dateFin;
     private Double prix;
 
@@ -37,12 +37,12 @@ public class Session {
         this.id = id;
     }
 
-    public Date getDeateDebut() {
-        return deateDebut;
+    public Date getDateDebut() {
+        return dateDebut;
     }
 
-    public void setDeateDebut(Date deateDebut) {
-        this.deateDebut = deateDebut;
+    public void setDateDebut(Date dateDebut) {
+        this.dateDebut = dateDebut;
     }
 
     public Date getDateFin() {
