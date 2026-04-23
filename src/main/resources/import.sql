@@ -13,7 +13,6 @@ INSERT INTO session (id, date_debut, date_fin, prix, utilisateur_id, vehicule_id
 INSERT INTO session (id, date_debut, date_fin, prix, utilisateur_id, vehicule_id) VALUES (2, '2023-01-02 14:00:00', '2023-01-02 16:00:00', 20.0, 2, 2);
 INSERT INTO session (id, date_debut, date_fin, prix, utilisateur_id, vehicule_id) VALUES (3, '2023-01-03 09:00:00', '2023-01-03 11:00:00', 18.5, 3, 3);
 
-
 -- Resynchronisation des séquences après insertion des fixtures
 SELECT setval(pg_get_serial_sequence('vehicule', 'id'), (SELECT MAX(id) FROM vehicule));
 SELECT setval(pg_get_serial_sequence('utilisateur', 'id'), (SELECT MAX(id) FROM utilisateur));
