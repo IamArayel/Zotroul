@@ -11,7 +11,7 @@ import com.dreams.zotroul.model.Utilisateur;
 import com.dreams.zotroul.repository.UtilisateurRepository;
 
 @RestController
-@RequestMapping("/api/utilisateurs")
+@RequestMapping("/utilisateurs")
 public class UtilisateurController {
 
     private final UtilisateurRepository utilisateurRepository;
