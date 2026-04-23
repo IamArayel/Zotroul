@@ -6,19 +6,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import com.dreams.zotroul.model.Session;
 import com.dreams.zotroul.model.Utilisateur;
 import com.dreams.zotroul.model.Vehicule;
-import com.dreams.zotroul.model.Utilisateur;
-import com.dreams.zotroul.model.Vehicule;
 
 @SpringBootTest
-@Sql("/data-test.sql")
 public class ModelFixturesTest {
 
     @PersistenceContext
@@ -29,16 +24,16 @@ public class ModelFixturesTest {
         List<Utilisateur> utilisateurs = entityManager
             .createQuery("SELECT u FROM Utilisateur u", Utilisateur.class)
             .getResultList();
-        assertThat(utilisateurs).hasSize(2);
+        assertThat(utilisateurs).hasSize(3);
 
         List<Vehicule> vehicules = entityManager
             .createQuery("SELECT v FROM Vehicule v", Vehicule.class)
             .getResultList();
-        assertThat(vehicules).hasSize(2);
+        assertThat(vehicules).hasSize(3);
 
         List<Session> sessions = entityManager
             .createQuery("SELECT s FROM Session s", Session.class)
             .getResultList();
-        assertThat(sessions).hasSize(2);
+        assertThat(sessions).hasSize(3);
     }
 }
