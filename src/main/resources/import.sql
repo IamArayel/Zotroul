@@ -4,9 +4,9 @@ INSERT INTO utilisateur (id, username, numero_telephone) VALUES (2, 'bob', '0987
 INSERT INTO utilisateur (id, username, numero_telephone) VALUES (3, 'charlie', '0567890123');
 
 -- Fixtures pour les véhicules
-INSERT INTO vehicule (id, etat_batterie, commune) VALUES (1, 85.5, 'Paris');
-INSERT INTO vehicule (id, etat_batterie, commune) VALUES (2, 92.0, 'Lyon');
-INSERT INTO vehicule (id, etat_batterie, commune) VALUES (3, 78.3, 'Marseille');
+INSERT INTO vehicule (id, etat_batterie, commune) VALUES (1, 85.5, 'Saint-Denis');
+INSERT INTO vehicule (id, etat_batterie, commune) VALUES (2, 92.0, 'Sainte-Marie');
+INSERT INTO vehicule (id, etat_batterie, commune) VALUES (3, 78.3, 'Saint-Pierre');
 
 -- Fixtures pour les sessions
 INSERT INTO session (id, date_debut, date_fin, prix, utilisateur_id, vehicule_id) VALUES (1, '2023-01-01 10:00:00', '2023-01-01 12:00:00', 15.0, 1, 1);
