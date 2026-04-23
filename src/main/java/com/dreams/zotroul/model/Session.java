@@ -2,7 +2,8 @@ package com.dreams.zotroul.model;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Session {
 
@@ -22,12 +24,10 @@ public class Session {
 
     @ManyToOne
     @JoinColumn(name = "utilisateur_id", nullable = false)
-    @JsonBackReference("utilisateur-session")
     private Utilisateur utilisateur;
 
     @ManyToOne
     @JoinColumn(name = "vehicule_id", nullable = false)
-    @JsonBackReference("vehicule-session")
     private Vehicule vehicule;
 
     public Session() {

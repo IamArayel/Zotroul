@@ -2,13 +2,15 @@ package com.dreams.zotroul.model;
 
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Utilisateur {
 
@@ -21,7 +23,6 @@ public class Utilisateur {
     private String numeroTelephone;
 
     @OneToMany(mappedBy = "utilisateur")
-    @JsonManagedReference("utilisateur-session")
     private Set<Session> sessions;
 
     public Utilisateur() {
