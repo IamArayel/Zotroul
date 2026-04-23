@@ -1,6 +1,5 @@
 package com.dreams.zotroul.model;
 
-
 import java.util.Date;
 
 import jakarta.persistence.Entity;
@@ -14,17 +13,17 @@ public class Session {
 
     @Id
     @GeneratedValue
-    private Long id; 
-    private Date date_debut;
-    private Date date_fin;
-    private Integer prix;
+    private Long id;
+    private Date deateDebut;
+    private Date dateFin;
+    private Double prix;
 
     @ManyToOne
-    @JoinColumn(name="utilisateur_id", nullable = false)
+    @JoinColumn(name = "utilisateur_id", nullable = false)
     private Utilisateur utilisateur;
 
     @ManyToOne
-    @JoinColumn(name="vehicule_id", nullable = false)
+    @JoinColumn(name = "vehicule_id", nullable = false)
     private Vehicule vehicule;
 
     public Session() {
@@ -38,27 +37,27 @@ public class Session {
         this.id = id;
     }
 
-    public Date getDate_debut() {
-        return date_debut;
+    public Date getDeateDebut() {
+        return deateDebut;
     }
 
-    public void setDate_debut(Date date_debut) {
-        this.date_debut = date_debut;
+    public void setDeateDebut(Date deateDebut) {
+        this.deateDebut = deateDebut;
     }
 
-    public Date getDate_fin() {
-        return date_fin;
+    public Date getDateFin() {
+        return dateFin;
     }
 
-    public void setDate_fin(Date date_fin) {
-        this.date_fin = date_fin;
+    public void setDateFin(Date dateFin) {
+        this.dateFin = dateFin;
     }
 
-    public Integer getPrix() {
+    public Double getPrix() {
         return prix;
     }
 
-    public void setPrix(Integer prix) {
+    public void setPrix(Double prix) {
         this.prix = prix;
     }
 
@@ -77,8 +76,5 @@ public class Session {
     public void setVehicule(Vehicule vehicule) {
         this.vehicule = vehicule;
     }
-
-    
-    
 
 }

@@ -8,20 +8,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Vehicule {
+public class Utilisateur {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private Float etatBatterie;
+    private String username;
 
-    private String commune;
+    private String numeroTelephone;
 
-    @OneToMany(mappedBy = "vehicule")
+    @OneToMany(mappedBy = "utilisateur")
     private Set<Session> sessions;
 
-    public Vehicule() {
+    public Utilisateur() {
     }
 
     public Long getId() {
@@ -32,20 +32,20 @@ public class Vehicule {
         this.id = id;
     }
 
-    public Float getEtatBatterie() {
-        return etatBatterie;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEtatBatterie(Float etatBatterie) {
-        this.etatBatterie = etatBatterie;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getCommune() {
-        return commune;
+    public String getNumeroTelephone() {
+        return numeroTelephone;
     }
 
-    public void setCommune(String commune) {
-        this.commune = commune;
+    public void setNumeroTelephone(String numeroTelephone) {
+        this.numeroTelephone = numeroTelephone;
     }
 
     public Set<Session> getSessions() {
