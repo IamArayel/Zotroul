@@ -2,6 +2,8 @@ package com.dreams.zotroul.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -20,10 +22,12 @@ public class Session {
 
     @ManyToOne
     @JoinColumn(name = "utilisateur_id", nullable = false)
+    @JsonIgnore
     private Utilisateur utilisateur;
 
     @ManyToOne
     @JoinColumn(name = "vehicule_id", nullable = false)
+    @JsonIgnore
     private Vehicule vehicule;
 
     public Session() {
