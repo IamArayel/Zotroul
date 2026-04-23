@@ -2,6 +2,8 @@ package com.dreams.zotroul.model;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +22,7 @@ public class Vehicule {
     private String commune;
 
     @OneToMany(mappedBy = "vehicule")
+    @JsonManagedReference("vehicule-session")
     private Set<Session> sessions;
 
     public Vehicule() {
