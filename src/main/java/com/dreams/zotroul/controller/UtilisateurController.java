@@ -34,6 +34,17 @@ public class UtilisateurController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/username/{username}")
+    public ResponseEntity<List<Utilisateur>> getByUsername(@PathVariable String username) {
+        List<Utilisateur> utilisateurs = utilisateurRepository.findAllByUsernameIgnoreCase(username);
+
+        if (utilisateurs.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(utilisateurs);
+    }
+
     // Créer un nouvel utilisateur
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Utilisateur utilisateur) {
