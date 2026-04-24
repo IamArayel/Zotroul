@@ -1,5 +1,6 @@
 package com.dreams.zotroul.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class SessionController {
 
     // Cette route GET /sessions recupere toutes les sessions de la base et les
     // retourne en JSON.
+    @Operation(summary = "Lister les sessions", description = "Retourne toutes les sessions enregistrees dans la base de donnees.")
     @GetMapping
     public Iterable<Session> getAll() {
         // findAll() recupere toutes les sessions en base
@@ -35,6 +37,7 @@ public class SessionController {
 
     // Cette route GET /sessions/{id} recupere une session par son id et retourne
     // 404 si elle n'existe pas.
+    @Operation(summary = "Recuperer une session", description = "Retourne une session a partir de son identifiant.")
     @GetMapping("/{id}")
     public ResponseEntity<Session> get(@PathVariable Long id) {
         // findById(id) cherche une session par son identifiant
@@ -47,6 +50,7 @@ public class SessionController {
 
     // Cette route POST /sessions cree une nouvelle session a partir du JSON envoye
     // dans la requete.
+    @Operation(summary = "Creer une session", description = "Cree une nouvelle session avec les donnees envoyees.")
     @PostMapping
     public ResponseEntity<Session> create(@RequestBody Session session) {
         // save(session) insere la nouvelle session dans la base
@@ -57,6 +61,7 @@ public class SessionController {
 
     // Cette route PUT /sessions/{id} modifie une session existante avec les
     // nouvelles donnees envoyees.
+    @Operation(summary = "Modifier une session", description = "Met a jour une session existante a partir de son identifiant.")
     @PutMapping("/{id}")
     public ResponseEntity<Session> update(@PathVariable Long id, @RequestBody Session session) {
         // Recherche de la session a modifier
@@ -84,6 +89,7 @@ public class SessionController {
 
     // Cette route DELETE /sessions/{id} supprime une session si elle existe sinon
     // retourne 404.
+    @Operation(summary = "Supprimer une session", description = "Supprime une session a partir de son identifiant.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         // Verification de l'existence de la session
@@ -101,6 +107,7 @@ public class SessionController {
 
     // Cette route GET /sessions/utilisateur/{id} recupere toutes les sessions liees
     // a un utilisateur.
+    @Operation(summary = "Lister les sessions d'un utilisateur", description = "Retourne toutes les sessions associees a un utilisateur.")
     @GetMapping("/utilisateur/{id}")
     public ResponseEntity<Iterable<Session>> getByUtilisateur(@PathVariable Long id) {
         return ResponseEntity.ok(sessionRepository.findByUtilisateurId(id));
@@ -108,6 +115,7 @@ public class SessionController {
 
     // Cette route GET /sessions/vehicule/{id} recupere toutes les sessions liees a
     // un vehicule.
+    @Operation(summary = "Lister les sessions d'un vehicule", description = "Retourne toutes les sessions associees a un vehicule.")
     @GetMapping("/vehicule/{id}")
     public ResponseEntity<Iterable<Session>> getByVehicule(@PathVariable Long id) {
         return ResponseEntity.ok(sessionRepository.findByVehiculeId(id));

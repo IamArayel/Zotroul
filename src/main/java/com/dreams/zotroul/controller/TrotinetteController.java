@@ -2,6 +2,7 @@ package com.dreams.zotroul.controller;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,12 +28,14 @@ public class TrotinetteController {
     }
 
     // Cette route GET /trotinettes recupere toutes les trotinettes.
+    @Operation(summary = "Lister les trotinettes", description = "Retourne la liste complete des trotinettes.")
     @GetMapping
     public List<Trotinette> getAll() {
         return trotinetteRepository.findAll();
     }
 
     // Cette route GET /trotinettes/{id} recupere une trotinette par son id.
+    @Operation(summary = "Recuperer une trotinette", description = "Retourne une trotinette a partir de son identifiant.")
     @GetMapping("/{id}")
     public ResponseEntity<Trotinette> getById(@PathVariable Long id) {
         return trotinetteRepository.findById(id)
@@ -41,6 +44,7 @@ public class TrotinetteController {
     }
 
     // Cette route POST /trotinettes cree une nouvelle trotinette.
+    @Operation(summary = "Creer une trotinette", description = "Cree une nouvelle trotinette avec les donnees envoyees.")
     @PostMapping
     public ResponseEntity<Trotinette> create(@RequestBody Trotinette trotinette) {
         trotinette.setId(null);
@@ -49,6 +53,7 @@ public class TrotinetteController {
     }
 
     // Cette route PUT /trotinettes/{id} met a jour une trotinette existante.
+    @Operation(summary = "Modifier une trotinette", description = "Met a jour une trotinette existante a partir de son identifiant.")
     @PutMapping("/{id}")
     public ResponseEntity<Trotinette> update(@PathVariable Long id, @RequestBody Trotinette trotinette) {
         return trotinetteRepository.findById(id)
@@ -64,6 +69,7 @@ public class TrotinetteController {
     }
 
     // Cette route DELETE /trotinettes/{id} supprime une trotinette par son id.
+    @Operation(summary = "Supprimer une trotinette", description = "Supprime une trotinette a partir de son identifiant.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (!trotinetteRepository.existsById(id)) {
