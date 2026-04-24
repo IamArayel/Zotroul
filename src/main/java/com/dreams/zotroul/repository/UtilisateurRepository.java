@@ -25,4 +25,8 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
      * @return true si au moins un utilisateur existe avec ce username
      */
     boolean existsByUsername(String username);
+
+    boolean existsByNumeroTelephone(String numeroTelephone);
+
+    boolean existsByNumeroTelephoneAndIdNot(String numeroTelephone, Long id);
 }
