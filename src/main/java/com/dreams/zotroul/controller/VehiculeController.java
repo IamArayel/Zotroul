@@ -35,6 +35,13 @@ public class VehiculeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Rechercher des vehicules par commune", description = "Retourne les vehicules d'une commune.")
+    @GetMapping("/commune/{commune}")
+    public ResponseEntity<List<Vehicule>> getByCommune(@PathVariable String commune) {
+        List<Vehicule> vehicules = vehiculeRepository.findAllByCommuneIgnoreCase(commune);
+        return ResponseEntity.ok(vehicules);
+    }
+
     // Crée un nouveau véhicule et retourne 201 avec la ressource créée
     @Operation(summary = "Creer un vehicule", description = "Cree un nouveau vehicule avec les donnees envoyees.")
     @PostMapping
