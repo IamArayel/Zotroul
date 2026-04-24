@@ -111,25 +111,23 @@ const VehiculeModal = ({ vehicule, defaultType = 'trotinette', onSave, onClose }
       onClose={onClose}>
       {/* Type selector — disabled on edit */}
       <FieldGroup>
-        <FieldLabel sub="Tip véhikil">Type de véhicule</FieldLabel>
-        <NSelect value={form.type}
+        <FloatSelect label="Type de véhicule" sub="· Tip véhikil"
+          value={form.type}
           onChange={e => setForm(p => ({ ...p, type: e.target.value }))}
           style={{ opacity: isEdit ? 0.6 : 1 }}
           disabled={isEdit}>
           {typeOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </NSelect>
+        </FloatSelect>
         {isEdit && <div style={{ fontSize: 11, color: '#b0a090', marginTop: 4 }}>Le type ne peut pas être modifié après création.</div>}
       </FieldGroup>
       <FieldGroup>
-        <FieldLabel sub="Batri (%)">État batterie</FieldLabel>
-        <NInput type="number" min="0" max="100" step="0.1"
-          value={form.etatBatterie} onChange={e => setForm(p => ({ ...p, etatBatterie: e.target.value }))}
-          placeholder="Ex : 85.5" />
+        <FloatInput label="État batterie" sub="· Batri (%)"
+          type="number" min="0" max="100" step="0.1"
+          value={form.etatBatterie} onChange={e => setForm(p => ({ ...p, etatBatterie: e.target.value }))} />
       </FieldGroup>
       <FieldGroup>
-        <FieldLabel sub="Komin">Commune</FieldLabel>
-        <NInput value={form.commune} onChange={e => setForm(p => ({ ...p, commune: e.target.value }))}
-          placeholder="Ex : Saint-Denis" />
+        <FloatInput label="Commune" sub="· Komin"
+          value={form.commune} onChange={e => setForm(p => ({ ...p, commune: e.target.value }))} />
       </FieldGroup>
       {/* Type-specific fields */}
       {(form.type === 'trotinette') && (
@@ -190,14 +188,12 @@ const UtilisateurModal = ({ utilisateur, onSave, onClose }) => {
       subtitle={isEdit ? `Chanj itilizatèr #${utilisateur.id}` : 'Nouvo itilizatèr'}
       onClose={onClose}>
       <FieldGroup>
-        <FieldLabel sub="Non d'itilizatèr">Nom d'utilisateur</FieldLabel>
-        <NInput value={form.username} onChange={e => setForm(p => ({ ...p, username: e.target.value }))}
-          placeholder="Ex : alice" />
+        <FloatInput label="Nom d'utilisateur" sub="· Non d'itilizatèr"
+          value={form.username} onChange={e => setForm(p => ({ ...p, username: e.target.value }))} />
       </FieldGroup>
       <FieldGroup>
-        <FieldLabel sub="Nimewo téléfòn">Numéro de téléphone</FieldLabel>
-        <NInput value={form.numeroTelephone} onChange={e => setForm(p => ({ ...p, numeroTelephone: e.target.value }))}
-          placeholder="Ex : 0692 00 00 00" />
+        <FloatInput label="Numéro de téléphone" sub="· Nimewo téléfòn"
+          value={form.numeroTelephone} onChange={e => setForm(p => ({ ...p, numeroTelephone: e.target.value }))} />
       </FieldGroup>
       {err && <div style={{ color: '#ef4444', fontSize: 13, marginBottom: 14 }}>⚠ {err}</div>}
       <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 8 }}>
@@ -252,31 +248,31 @@ const SessionModal = ({ session, utilisateurs, vehicules, onSave, onClose }) => 
       onClose={onClose} width={520}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
         <FieldGroup>
-          <FieldLabel sub="Dat dépar">Date de début</FieldLabel>
-          <NInput type="datetime-local" value={form.dateDebut} onChange={e => setForm(p => ({ ...p, dateDebut: e.target.value }))} />
+          <FloatInput label="Date de début" sub="· Dat dépar"
+            type="datetime-local" value={form.dateDebut} onChange={e => setForm(p => ({ ...p, dateDebut: e.target.value }))} />
         </FieldGroup>
         <FieldGroup>
-          <FieldLabel sub="Dat la fin">Date de fin</FieldLabel>
-          <NInput type="datetime-local" value={form.dateFin} onChange={e => setForm(p => ({ ...p, dateFin: e.target.value }))} />
+          <FloatInput label="Date de fin" sub="· Dat la fin"
+            type="datetime-local" value={form.dateFin} onChange={e => setForm(p => ({ ...p, dateFin: e.target.value }))} />
         </FieldGroup>
       </div>
       <FieldGroup>
-        <FieldLabel sub="Pri (€)">Prix</FieldLabel>
-        <NInput type="number" step="0.01" value={form.prix} onChange={e => setForm(p => ({ ...p, prix: e.target.value }))} placeholder="Ex : 15.00" />
+        <FloatInput label="Prix" sub="· Pri (€)"
+          type="number" step="0.01" value={form.prix} onChange={e => setForm(p => ({ ...p, prix: e.target.value }))} />
       </FieldGroup>
       <FieldGroup>
-        <FieldLabel sub="Utilizatèr">Utilisateur</FieldLabel>
-        <NSelect value={form.utilisateurId} onChange={e => setForm(p => ({ ...p, utilisateurId: e.target.value }))}>
+        <FloatSelect label="Utilisateur" sub="· Utilizatèr"
+          value={form.utilisateurId} onChange={e => setForm(p => ({ ...p, utilisateurId: e.target.value }))}>
           <option value="">— Sélectionner —</option>
           {utilisateurs.map(u => <option key={u.id} value={u.id}>#{u.id} · {u.username}</option>)}
-        </NSelect>
+        </FloatSelect>
       </FieldGroup>
       <FieldGroup>
-        <FieldLabel sub="Véhikil">Véhicule</FieldLabel>
-        <NSelect value={form.vehiculeId} onChange={e => setForm(p => ({ ...p, vehiculeId: e.target.value }))}>
+        <FloatSelect label="Véhicule" sub="· Véhikil"
+          value={form.vehiculeId} onChange={e => setForm(p => ({ ...p, vehiculeId: e.target.value }))}>
           <option value="">— Sélectionner —</option>
           {vehicules.map(v => <option key={v.id} value={v.id}>#{v.id} · {v.commune} ({(v.etatBatterie||0).toFixed(0)}%)</option>)}
-        </NSelect>
+        </FloatSelect>
       </FieldGroup>
       {err && <div style={{ color: '#ef4444', fontSize: 13, marginBottom: 14 }}>⚠ {err}</div>}
       <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 8 }}>

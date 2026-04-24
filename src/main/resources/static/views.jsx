@@ -204,7 +204,7 @@ const VehiculesView = () => {
       </div>
 
       <NCard>
-        <SearchBar value={search} onChange={setSearch} placeholder="Rod par komin ou ID… · Chercher par commune ou ID…" />
+        <SearchBar value={search} onChange={setSearch} placeholder="Chercher par commune ou ID… · Rod par komin ou ID…" />
         {loading ? <Spinner /> : error ? <ErrorMsg msg={error} onRetry={load} /> : (
           <NTable
             cols={[
@@ -295,7 +295,7 @@ const UtilisateursView = () => {
       <PageHeader title="Utilisateurs" subtitle="Itilizatèr — Zéstion bann kont"
         action={<BtnBlue onClick={() => setModal({ type: 'create' })}>+ Ajouter · Azout</BtnBlue>} />
       <NCard>
-        <SearchBar value={search} onChange={setSearch} placeholder="Rod par non ou téléfòn… · Chercher par nom ou téléphone…" />
+        <SearchBar value={search} onChange={setSearch} placeholder="Chercher par nom ou téléphone… · Rod par nom ou téléfòn…" />
         {loading ? <Spinner /> : error ? <ErrorMsg msg={error} onRetry={load} /> : (
           <NTable
             cols={[
@@ -391,7 +391,7 @@ const SessionsView = () => {
       <PageHeader title="Sessions" subtitle="Sésion — Istorik bann lokasion"
         action={<BtnBlue onClick={() => setModal({ type: 'create' })}>+ Ajouter · Azout</BtnBlue>} />
       <NCard>
-        <SearchBar value={search} onChange={setSearch} placeholder="Rod par ID, itilizatèr, komin… · Chercher par ID, utilisateur, commune…" />
+        <SearchBar value={search} onChange={setSearch} placeholder="Chercher par ID, utilisateur, commune… · Rod par ID, itilizatèr, komin…" />
         {loading ? <Spinner /> : error ? <ErrorMsg msg={error} onRetry={load} /> : (
           <NTable
             cols={[

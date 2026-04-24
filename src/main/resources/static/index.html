@@ -70,6 +70,37 @@
 
     /* Button hover states */
     button:active { transform: scale(.97); }
+
+    /* ─── Floating label fields ─── */
+    .float-field { position: relative; }
+    .float-field > label {
+      position: absolute;
+      left: 14px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px; font-weight: 400;
+      color: var(--text-3);
+      font-family: 'DM Sans', sans-serif;
+      pointer-events: none; line-height: 1; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; max-width: calc(100% - 28px);
+      transition: top .18s ease, font-size .18s ease, color .18s ease,
+                  transform .18s ease, font-weight .18s ease, letter-spacing .18s ease, left .18s ease;
+    }
+    .float-label-sub { margin-left: 3px; font-size: 9px; opacity: 0; transition: opacity .18s ease; }
+    .float-field > input:focus + label,
+    .float-field > input:not(:placeholder-shown) + label,
+    .float-field > select:focus + label,
+    .float-field:has(> select option:not([value=""]):checked) > label {
+      top: 8px; transform: translateY(0);
+      font-size: 10px; font-weight: 600; color: var(--text-2); letter-spacing: .4px;
+    }
+    .float-field > input:focus + label .float-label-sub,
+    .float-field > input:not(:placeholder-shown) + label .float-label-sub,
+    .float-field > select:focus + label .float-label-sub,
+    .float-field:has(> select option:not([value=""]):checked) > label .float-label-sub { opacity: 1; }
+    /* Search bar variant — label starts after the ⌕ icon, slides left when floated */
+    .float-field--icon > label { left: 36px; }
+    .float-field--icon > input:focus + label,
+    .float-field--icon > input:not(:placeholder-shown) + label { left: 14px; }
   </style>
 </head>
 <body>

@@ -147,6 +147,30 @@ const NSelect = ({ children, style = {}, ...props }) => (
   }}>{children}</select>
 );
 
+// Floating label input — label slides up on focus or when filled
+const FloatInput = ({ label, sub, style: s = {}, ...props }) => (
+  <div className="float-field">
+    <NInput {...props} placeholder=" " style={{ paddingTop: 18, paddingBottom: 6, ...s }} />
+    <label>
+      {label}
+      {sub && <span className="float-label-sub">{sub}</span>}
+    </label>
+  </div>
+);
+
+// Floating label select — label slides up on focus or when a value is selected
+const FloatSelect = ({ label, sub, style: s = {}, children, ...props }) => (
+  <div className="float-field">
+    <NSelect {...props} style={{ paddingTop: 18, paddingBottom: 6, ...s }}>
+      {children}
+    </NSelect>
+    <label>
+      {label}
+      {sub && <span className="float-label-sub">{sub}</span>}
+    </label>
+  </div>
+);
+
 // Blue primary button
 const BtnBlue = ({ children, style = {}, small = false, ...props }) => (
   <button {...props} style={{
@@ -182,12 +206,13 @@ const PageHeader = ({ title, subtitle, action }) => (
   </div>
 );
 
-// Search bar
+// Search bar with floating label
 const SearchBar = ({ value, onChange, placeholder }) => (
-  <div style={{ position: 'relative', marginBottom: 20 }}>
-    <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#9e8e80', fontSize: 15 }}>⌕</span>
-    <NInput value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder || 'Rechercher…'}
-      style={{ paddingLeft: 36 }} />
+  <div className="float-field float-field--icon" style={{ marginBottom: 20 }}>
+    <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#9e8e80', fontSize: 15, zIndex: 1 }}>⌕</span>
+    <NInput value={value} onChange={e => onChange(e.target.value)} placeholder=" "
+      style={{ paddingLeft: 36, paddingTop: 18, paddingBottom: 6 }} />
+    <label>{placeholder || 'Rechercher…'}</label>
   </div>
 );
 
@@ -287,7 +312,7 @@ const VehicleTypes = {
 
 Object.assign(window, {
   useToast, ToastContainer, Sidebar,
-  NCard, NInput, NSelect, BtnBlue, BtnGhost,
+  NCard, NInput, NSelect, FloatInput, FloatSelect, BtnBlue, BtnGhost,
   PageHeader, SearchBar, BatteryBar, KpiCard,
   Spinner, ErrorMsg, NTable, VehicleTypes,
 });
