@@ -23,9 +23,9 @@ INSERT INTO trotinette (id, panier) VALUES (6, false);
 INSERT INTO vehicule (id, etat_batterie, commune) VALUES (7, 95.0, 'Saint-Benoît');
 INSERT INTO vehicule (id, etat_batterie, commune) VALUES (8, 54.5, 'La Possession');
 INSERT INTO vehicule (id, etat_batterie, commune) VALUES (9, 80.0, 'Saint-André');
-INSERT INTO scooter (id, panier) VALUES (7, true);
-INSERT INTO scooter (id, panier) VALUES (8, false);
-INSERT INTO scooter (id, panier) VALUES (9, true);
+INSERT INTO scooter (id, coffre) VALUES (7, true);
+INSERT INTO scooter (id, coffre) VALUES (8, false);
+INSERT INTO scooter (id, coffre) VALUES (9, true);
 
 -- Fixtures pour les sessions
 INSERT INTO session (id, date_debut, date_fin, prix, utilisateur_id, vehicule_id) VALUES (1, '2023-01-01 10:00:00', '2023-01-01 12:00:00', 15.0, 1, 1);
