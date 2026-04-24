@@ -1,5 +1,5 @@
-// Zotroul API Service — http://localhost:8080
-const BASE_URL = 'http://localhost:8080';
+// Zotroul API Service
+const BASE_URL = '';
 
 const req = async (method, path, body) => {
   const opts = { method, headers: { 'Content-Type': 'application/json' } };

@@ -106,7 +106,7 @@ const Sidebar = ({ active, onNav, lang }) => {
 
       {/* Footer */}
       <div style={{ marginTop: 'auto', padding: '12px 6px 0', borderTop: '1px solid #ccc5bb', fontSize: 11, color: '#a09080' }}>
-        Backend → <span style={{ color: '#1a6bff' }}>localhost:8080</span>
+        Zot Roul - 2026 - Anthony Dégeilh, Kery Richard Dassot et Maxime Nash
       </div>
     </aside>
   );
