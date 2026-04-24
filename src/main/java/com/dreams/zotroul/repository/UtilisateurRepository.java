@@ -1,5 +1,6 @@
 package com.dreams.zotroul.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,6 +26,8 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
      * @return true si au moins un utilisateur existe avec ce username
      */
     boolean existsByUsername(String username);
+
+    List<Utilisateur> findAllByUsernameIgnoreCase(String username);
 
     boolean existsByNumeroTelephone(String numeroTelephone);
 
