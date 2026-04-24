@@ -40,11 +40,15 @@ public class UtilisateurController {
         if (utilisateur.getUsername() == null || utilisateur.getUsername().isBlank()) {
             return ResponseEntity.badRequest().body(Map.of("message", "username est obligatoire"));
         }
-        if (utilisateurRepository.existsByUsername(utilisateur.getUsername())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("message", "username déjà utilisé"));
+        if (utilisateur.getNumeroTelephone() == null || utilisateur.getNumeroTelephone().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "numeroTelephone est obligatoire"));
         }
-        utilisateur.setId(null); // sécurité : on ne laisse pas le client imposer un ID
+        if (utilisateurRepository.existsByNumeroTelephone(utilisateur.getNumeroTelephone())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", "Numéro de téléphone déjà utilisé"));
+        }
+
+        utilisateur.setId(null);
         Utilisateur saved = utilisateurRepository.save(utilisateur);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
@@ -53,19 +57,18 @@ public class UtilisateurController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Utilisateur utilisateur) {
         return utilisateurRepository.findById(id).map(existing -> {
-            // Si username modifié, on vérifie qu'il n'est pas déjà pris
-            if (utilisateur.getUsername() != null && !utilisateur.getUsername().isBlank()
-                    && !utilisateur.getUsername().equals(existing.getUsername())
-                    && utilisateurRepository.existsByUsername(utilisateur.getUsername())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body(Map.of("message", "username déjà utilisé"));
-            }
             if (utilisateur.getUsername() != null && !utilisateur.getUsername().isBlank()) {
                 existing.setUsername(utilisateur.getUsername());
             }
-            if (utilisateur.getNumeroTelephone() != null) {
+
+            if (utilisateur.getNumeroTelephone() != null && !utilisateur.getNumeroTelephone().isBlank()) {
+                if (utilisateurRepository.existsByNumeroTelephoneAndIdNot(utilisateur.getNumeroTelephone(), id)) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT)
+                            .body(Map.of("message", "Numéro de téléphone déjà utilisé"));
+                }
                 existing.setNumeroTelephone(utilisateur.getNumeroTelephone());
             }
+
             Utilisateur saved = utilisateurRepository.save(existing);
             return ResponseEntity.ok(saved);
         }).orElseGet(() -> ResponseEntity.notFound().build());
