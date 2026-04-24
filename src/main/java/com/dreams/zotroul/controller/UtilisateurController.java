@@ -45,7 +45,7 @@ public class UtilisateurController {
         }
         if (utilisateurRepository.existsByNumeroTelephone(utilisateur.getNumeroTelephone())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("message", "numeroTelephone déjà utilisé"));
+                    .body(Map.of("message", "Numéro de téléphone déjà utilisé"));
         }
 
         utilisateur.setId(null);
@@ -64,7 +64,7 @@ public class UtilisateurController {
             if (utilisateur.getNumeroTelephone() != null && !utilisateur.getNumeroTelephone().isBlank()) {
                 if (utilisateurRepository.existsByNumeroTelephoneAndIdNot(utilisateur.getNumeroTelephone(), id)) {
                     return ResponseEntity.status(HttpStatus.CONFLICT)
-                            .body(Map.of("message", "numeroTelephone deja utilise"));
+                            .body(Map.of("message", "Numéro de téléphone déjà utilisé"));
                 }
                 existing.setNumeroTelephone(utilisateur.getNumeroTelephone());
             }
