@@ -264,14 +264,14 @@ const SessionModal = ({ session, utilisateurs, vehicules, onSave, onClose }) => 
       <FieldGroup>
         <FloatSelect label="Utilisateur" sub="· Utilizatèr"
           value={form.utilisateurId} onChange={e => setForm(p => ({ ...p, utilisateurId: e.target.value }))}>
-          <option value="">— Sélectionner —</option>
+          <option value=""></option>
           {utilisateurs.map(u => <option key={u.id} value={u.id}>#{u.id} · {u.username}</option>)}
         </FloatSelect>
       </FieldGroup>
       <FieldGroup>
         <FloatSelect label="Véhicule" sub="· Véhikil"
           value={form.vehiculeId} onChange={e => setForm(p => ({ ...p, vehiculeId: e.target.value }))}>
-          <option value="">— Sélectionner —</option>
+          <option value=""></option>
           {vehicules.map(v => <option key={v.id} value={v.id}>#{v.id} · {v.commune} ({(v.etatBatterie||0).toFixed(0)}%)</option>)}
         </FloatSelect>
       </FieldGroup>
