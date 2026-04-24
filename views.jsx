@@ -15,7 +15,12 @@ const DashboardView = () => {
     try {
       const [u, v, s] = await Promise.all([
         UtilisateurAPI.getAll(),
-        VehiculeAPI.getAll(),
+        Promise.all([TrotinetteAPI.getAll(), VeloAPI.getAll(), ScooterAPI.getAll()])
+          .then(([t, ve, sc]) => [
+            ...(t||[]).map(x=>({...x,_type:'trotinette'})),
+            ...(ve||[]).map(x=>({...x,_type:'velo'})),
+            ...(sc||[]).map(x=>({...x,_type:'scooter'})),
+          ]),
         SessionAPI.getAll(),
       ]);
       setData({ utilisateurs: u || [], vehicules: v || [], sessions: s || [] });
@@ -99,12 +104,12 @@ const DashboardView = () => {
 };
 
 /* ═══════════════════════════════════════════════════════════
-   VÉHICULES VIEW — with type filter checkboxes
+   VÉHICULES VIEW — fetches from 3 typed APIs
 ═══════════════════════════════════════════════════════════ */
 const TYPE_DEFS = [
-  { key: 'trottinette', labelFR: 'Trottinettes', labelKR: 'Trotinet',  icon: '▷', color: '#44adfd' },
-  { key: 'velo',        labelFR: 'Vélos',         labelKR: 'Vélo',      icon: '◷', color: '#8b5cf6' },
-  { key: 'scooter',     labelFR: 'Scooters',      labelKR: 'Skoutèr',   icon: '◈', color: '#f59e0b' },
+  { key: 'trotinette', labelFR: 'Trottinettes', labelKR: 'Trotinet', icon: '▷', color: '#44adfd' },
+  { key: 'velo',       labelFR: 'Vélos',         labelKR: 'Vélo',     icon: '◷', color: '#8b5cf6' },
+  { key: 'scooter',    labelFR: 'Scooters',      labelKR: 'Skoutèr',  icon: '◈', color: '#f59e0b' },
 ];
 
 const VehiculesView = () => {
@@ -113,13 +118,24 @@ const VehiculesView = () => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState('');
   const [search, setSearch] = React.useState('');
-  const [activeTypes, setActiveTypes] = React.useState({ trottinette: true, velo: true, scooter: true });
+  const [activeTypes, setActiveTypes] = React.useState({ trotinette: true, velo: true, scooter: true });
   const [modal, setModal] = React.useState(null);
 
   const load = async () => {
     setLoading(true); setError('');
-    try { setItems(await VehiculeAPI.getAll() || []); }
-    catch (e) { setError(e.message); }
+    try {
+      const [trotinettes, velos, scooters] = await Promise.all([
+        TrotinetteAPI.getAll(),
+        VeloAPI.getAll(),
+        ScooterAPI.getAll(),
+      ]);
+      const all = [
+        ...(trotinettes || []).map(t => ({ ...t, _type: 'trotinette' })),
+        ...(velos       || []).map(v => ({ ...v, _type: 'velo' })),
+        ...(scooters    || []).map(s => ({ ...s, _type: 'scooter' })),
+      ];
+      setItems(all);
+    } catch (e) { setError(e.message); }
     setLoading(false);
   };
 
@@ -127,25 +143,25 @@ const VehiculesView = () => {
 
   const toggleType = (key) => setActiveTypes(p => ({ ...p, [key]: !p[key] }));
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (item) => {
     try {
-      await VehiculeAPI.delete(id);
+      await apiForType(item._type).delete(item.id);
       toast.success('Véhicule supprimé · Souplimé');
       setModal(null); load();
     } catch (e) { toast.error(e.message); }
   };
 
-  const handleSave = (id, type) => {
-    if (id) VehicleTypes.set(id, type || 'trottinette');
+  const handleSave = () => {
     toast.success(modal?.type === 'edit' ? 'Véhicule modifié · Chanjé' : 'Véhicule kréyé');
     setModal(null); load();
   };
 
   const filtered = items.filter(v => {
-    const t = VehicleTypes.get(v.id);
-    if (!activeTypes[t]) return false;
+    if (!activeTypes[v._type]) return false;
     return (v.commune || '').toLowerCase().includes(search.toLowerCase()) || String(v.id).includes(search);
   });
+
+  const countByType = (key) => items.filter(v => v._type === key).length;
 
   return (
     <div>
@@ -163,7 +179,7 @@ const VehiculesView = () => {
               background: '#e0d9d0', fontFamily: 'DM Sans, sans-serif', fontSize: 13, fontWeight: 600,
               color: on ? td.color : '#b0a090',
               boxShadow: on
-                ? `inset 4px 4px 10px #c5bfb6, inset -4px -4px 10px #f5ede4`
+                ? 'inset 4px 4px 10px #c5bfb6, inset -4px -4px 10px #f5ede4'
                 : '4px 4px 10px #c5bfb6, -4px -4px 10px #f5ede4',
               transition: 'all .2s',
             }}>
@@ -181,9 +197,7 @@ const VehiculesView = () => {
                 marginLeft: 4, fontSize: 11, fontWeight: 700,
                 background: on ? td.color : '#c5bfb6', color: '#fff',
                 borderRadius: 6, padding: '1px 7px',
-              }}>
-                {items.filter(v => VehicleTypes.get(v.id) === td.key).length}
-              </span>
+              }}>{countByType(td.key)}</span>
             </button>
           );
         })}
@@ -196,11 +210,18 @@ const VehiculesView = () => {
             cols={[
               { label: 'ID', render: r => <span style={{ color: '#1a6bff', fontWeight: 700 }}>#{r.id}</span> },
               { label: 'Type', render: r => {
-                const td = TYPE_DEFS.find(t => t.key === VehicleTypes.get(r.id)) || TYPE_DEFS[0];
-                return <span style={{ color: td.color, fontWeight: 600 }}>{td.icon} {td.labelFR}</span>;
+                const td = TYPE_DEFS.find(t => t.key === r._type) || TYPE_DEFS[0];
+                return <span style={{ color: td.color, fontWeight: 600 }}>{td.icon} {td.labelFR.replace(/s$/, '')}</span>;
               }},
               { label: 'Commune · Komin', key: 'commune' },
               { label: 'Batterie · Batri', render: r => <BatteryBar value={r.etatBatterie} /> },
+              { label: 'Options', render: r => {
+                if (r._type === 'trotinette' || r._type === 'scooter')
+                  return <span style={{ fontSize: 12, color: r.panier ? '#22c55e' : '#c0b0a0' }}>{r.panier ? '✓ Panier' : '— Panier'}</span>;
+                if (r._type === 'velo')
+                  return <span style={{ fontSize: 12, color: r.porteBagage ? '#22c55e' : '#c0b0a0' }}>{r.porteBagage ? '✓ Porte-bagage' : '— Porte-bagage'}</span>;
+                return '—';
+              }},
               { label: 'Sessions · Sésion', render: r => <span style={{ color: '#8b5cf6', fontWeight: 600 }}>{r.sessions?.length ?? 0}</span> },
               {
                 label: 'Actions', render: r => (
@@ -221,8 +242,8 @@ const VehiculesView = () => {
       {modal?.type === 'edit' && <VehiculeModal vehicule={modal.data} onSave={handleSave} onClose={() => setModal(null)} />}
       {modal?.type === 'delete' && (
         <ConfirmModal
-          message={`Souplimé véhikil #${modal.data.id} (${modal.data.commune}) ? · Supprimer le véhicule #${modal.data.id} ?`}
-          onConfirm={() => handleDelete(modal.data.id)}
+          message={`Souplimé véhikil #${modal.data.id} (${modal.data.commune}) ?`}
+          onConfirm={() => handleDelete(modal.data)}
           onClose={() => setModal(null)}
         />
       )}

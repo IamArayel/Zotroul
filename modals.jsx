@@ -45,12 +45,14 @@ const FieldGroup = ({ children }) => (
 /* ═══════════════════════════════════════════════════════════
    VÉHICULE MODAL
 ═══════════════════════════════════════════════════════════ */
-const VehiculeModal = ({ vehicule, defaultType = 'trottinette', onSave, onClose }) => {
+const VehiculeModal = ({ vehicule, defaultType = 'trotinette', onSave, onClose }) => {
   const isEdit = !!vehicule;
   const [form, setForm] = React.useState({
     etatBatterie: vehicule ? vehicule.etatBatterie : '',
     commune: vehicule ? vehicule.commune : '',
-    type: vehicule ? VehicleTypes.get(vehicule.id) : defaultType,
+    type: vehicule ? (vehicule._type || defaultType) : defaultType,
+    panier: vehicule ? (vehicule.panier || false) : false,
+    porteBagage: vehicule ? (vehicule.porteBagage || false) : false,
   });
   const [loading, setLoading] = React.useState(false);
   const [err, setErr] = React.useState('');
@@ -60,32 +62,63 @@ const VehiculeModal = ({ vehicule, defaultType = 'trottinette', onSave, onClose 
     if (form.etatBatterie === '' || isNaN(Number(form.etatBatterie))) { setErr("L'état batterie doit être un nombre."); return; }
     setLoading(true);
     try {
-      const payload = { etatBatterie: parseFloat(form.etatBatterie), commune: form.commune.trim() };
-      let saved;
-      if (isEdit) saved = await VehiculeAPI.update(vehicule.id, payload);
-      else saved = await VehiculeAPI.create(payload);
-      // Persist type in localStorage
-      if (saved && saved.id) VehicleTypes.set(saved.id, form.type);
-      onSave(saved?.id, form.type);
+      const api = apiForType(form.type);
+      const base = { etatBatterie: parseFloat(form.etatBatterie), commune: form.commune.trim() };
+      let payload;
+      if (form.type === 'trotinette') payload = { ...base, panier: form.panier };
+      else if (form.type === 'velo')   payload = { ...base, porteBagage: form.porteBagage };
+      else if (form.type === 'scooter') payload = { ...base, panier: form.panier };
+      else payload = base;
+
+      if (isEdit) await api.update(vehicule.id, payload);
+      else await api.create(payload);
+      onSave();
     } catch (e) { setErr(e.message); }
     setLoading(false);
   };
 
   const typeOptions = [
-    { value: 'trottinette', label: '▷ Trottinette' },
-    { value: 'velo',        label: '◷ Vélo' },
-    { value: 'scooter',     label: '◈ Scooter' },
+    { value: 'trotinette', label: '▷ Trottinette' },
+    { value: 'velo',       label: '◷ Vélo' },
+    { value: 'scooter',    label: '◈ Scooter' },
   ];
 
+  // Inline toggle for boolean fields
+  const Toggle = ({ label, labelKR, value, onChange }) => (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: 10, background: '#e0d9d0', boxShadow: 'inset 4px 4px 8px #c5bfb6, inset -4px -4px 8px #f5ede4' }}>
+      <div>
+        <div style={{ fontSize: 13, color: '#3a3128', fontWeight: 500 }}>{label}</div>
+        <div style={{ fontSize: 10, color: '#b0a090' }}>{labelKR}</div>
+      </div>
+      <button onClick={() => onChange(!value)} style={{
+        width: 44, height: 24, borderRadius: 12, border: 'none', cursor: 'pointer',
+        background: value ? '#44adfd' : '#c5bfb6', transition: 'background .2s', position: 'relative',
+        boxShadow: value ? '0 2px 8px #a0d0f8' : 'none',
+      }}>
+        <span style={{
+          position: 'absolute', top: 3, left: value ? 22 : 3,
+          width: 18, height: 18, borderRadius: '50%', background: '#fff',
+          transition: 'left .2s', boxShadow: '0 1px 3px rgba(0,0,0,.2)',
+        }} />
+      </button>
+    </div>
+  );
+
   return (
-    <ModalShell title={isEdit ? 'Modifier le véhicule' : 'Ajouter un véhicule'}
+    <ModalShell
+      title={isEdit ? 'Modifier le véhicule' : 'Ajouter un véhicule'}
       subtitle={isEdit ? `Chanj véhikil #${vehicule.id}` : 'Nouvo véhikil'}
       onClose={onClose}>
+      {/* Type selector — disabled on edit */}
       <FieldGroup>
         <FieldLabel sub="Tip véhikil">Type de véhicule</FieldLabel>
-        <NSelect value={form.type} onChange={e => setForm(p => ({ ...p, type: e.target.value }))}>
+        <NSelect value={form.type}
+          onChange={e => setForm(p => ({ ...p, type: e.target.value }))}
+          style={{ opacity: isEdit ? 0.6 : 1 }}
+          disabled={isEdit}>
           {typeOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </NSelect>
+        {isEdit && <div style={{ fontSize: 11, color: '#b0a090', marginTop: 4 }}>Le type ne peut pas être modifié après création.</div>}
       </FieldGroup>
       <FieldGroup>
         <FieldLabel sub="Batri (%)">État batterie</FieldLabel>
@@ -98,6 +131,25 @@ const VehiculeModal = ({ vehicule, defaultType = 'trottinette', onSave, onClose 
         <NInput value={form.commune} onChange={e => setForm(p => ({ ...p, commune: e.target.value }))}
           placeholder="Ex : Saint-Denis" />
       </FieldGroup>
+      {/* Type-specific fields */}
+      {(form.type === 'trotinette') && (
+        <FieldGroup>
+          <FieldLabel sub="Panié">Panier</FieldLabel>
+          <Toggle label="Panier inclus" labelKR="Ék panié" value={form.panier} onChange={v => setForm(p => ({ ...p, panier: v }))} />
+        </FieldGroup>
+      )}
+      {form.type === 'velo' && (
+        <FieldGroup>
+          <FieldLabel sub="Port-bagaj">Porte-bagage</FieldLabel>
+          <Toggle label="Porte-bagage inclus" labelKR="Ék port-bagaj" value={form.porteBagage} onChange={v => setForm(p => ({ ...p, porteBagage: v }))} />
+        </FieldGroup>
+      )}
+      {form.type === 'scooter' && (
+        <FieldGroup>
+          <FieldLabel sub="Panié">Panier</FieldLabel>
+          <Toggle label="Panier inclus" labelKR="Ék panié" value={form.panier} onChange={v => setForm(p => ({ ...p, panier: v }))} />
+        </FieldGroup>
+      )}
       {err && <div style={{ color: '#ef4444', fontSize: 13, marginBottom: 14 }}>⚠ {err}</div>}
       <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 8 }}>
         <BtnGhost onClick={onClose}>Annuler · Anilé</BtnGhost>

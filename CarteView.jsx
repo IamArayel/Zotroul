@@ -50,7 +50,16 @@ const CarteView = () => {
   const load = async () => {
     setLoading(true); setError('');
     try {
-      const v = await VehiculeAPI.getAll();
+      const [t, ve, sc] = await Promise.all([
+        TrotinetteAPI.getAll(),
+        VeloAPI.getAll(),
+        ScooterAPI.getAll(),
+      ]);
+      const v = [
+        ...(t||[]).map(x=>({...x,_type:'trotinette'})),
+        ...(ve||[]).map(x=>({...x,_type:'velo'})),
+        ...(sc||[]).map(x=>({...x,_type:'scooter'})),
+      ];
       setVehicules(v || []);
     } catch (e) {
       setError(e.message);
