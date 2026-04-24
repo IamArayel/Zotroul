@@ -293,14 +293,42 @@ const VehicleTypes = {
   TYPES:    { trottinettes: 'trottinette', velos: 'velo', scooters: 'scooter' },
   LABELS:   { trottinette: 'Trottinette', velo: 'Vélo', scooter: 'Scooter' },
   LABELS_KR:{ trottinette: 'Trotinet', velo: 'Vélo', scooter: 'Skoutèr' },
-  ICONS:    { trottinette: '▷', velo: '◷', scooter: '◈' },
+  ICONS:    { trottinette: '🛴', velo: '🚲', scooter: '🛵' },
   get: (id) => localStorage.getItem(`zt_vtype_${id}`) || 'trottinette',
   set: (id, type) => localStorage.setItem(`zt_vtype_${id}`, type),
+};
+
+// Canonical list of the 24 communes of La Réunion (shared by modals + CarteView)
+const COMMUNES_COORDS = {
+  'Bras-Panon':              [-21.0083, 55.6928],
+  'Cilaos':                  [-21.1367, 55.4767],
+  'Entre-Deux':              [-21.2167, 55.4667],
+  "L'Étang-Salé":           [-21.2667, 55.3667],
+  'La Plaine-des-Palmistes': [-21.1167, 55.6167],
+  'La Possession':           [-20.9329, 55.3357],
+  'Le Port':                 [-20.9356, 55.3097],
+  'Le Tampon':               [-21.2729, 55.5150],
+  'Les Avirons':             [-21.2167, 55.3167],
+  'Petite-Île':              [-21.3625, 55.5611],
+  'Saint-André':             [-20.9644, 55.6483],
+  'Saint-Benoît':            [-21.0347, 55.7169],
+  'Saint-Denis':             [-20.8789, 55.4481],
+  'Saint-Joseph':            [-21.3833, 55.6167],
+  'Saint-Leu':               [-21.1531, 55.2847],
+  'Saint-Louis':             [-21.2699, 55.4103],
+  'Saint-Paul':              [-21.0052, 55.2699],
+  'Saint-Philippe':          [-21.3597, 55.7706],
+  'Saint-Pierre':            [-21.3411, 55.4771],
+  'Sainte-Marie':            [-20.9000, 55.5333],
+  'Sainte-Rose':             [-21.1289, 55.7944],
+  'Sainte-Suzanne':          [-20.9267, 55.5981],
+  'Salazie':                 [-21.0264, 55.5408],
+  'Trois-Bassins':           [-21.1000, 55.2833],
 };
 
 Object.assign(window, {
   useToast, ToastContainer, Sidebar,
   NCard, NInput, NSelect, FloatInput, FloatSelect, BtnBlue, BtnGhost,
   PageHeader, SearchBar, BatteryBar, KpiCard,
-  Spinner, ErrorMsg, NTable, VehicleTypes,
+  Spinner, ErrorMsg, NTable, VehicleTypes, COMMUNES_COORDS,
 });

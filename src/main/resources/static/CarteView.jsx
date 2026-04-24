@@ -1,34 +1,7 @@
 // CarteView.jsx — Leaflet map centered on La Réunion
 // Exports to window: { CarteView }
 
-// Coordinates of main communes of La Réunion
-const COMMUNES_COORDS = {
-  'Saint-Denis':    [-20.8789, 55.4481],
-  'Saint-Paul':     [-21.0052, 55.2699],
-  'Saint-Pierre':   [-21.3411, 55.4771],
-  'Saint-Louis':    [-21.2699, 55.4103],
-  'Le Tampon':      [-21.2729, 55.5150],
-  'Saint-Andre':    [-20.9644, 55.6483],
-  'Saint-André':    [-20.9644, 55.6483],
-  'Sainte-Marie':   [-20.9000, 55.5333],
-  'Sainte-Rose':    [-21.1289, 55.7944],
-  'Sainte-Suzanne': [-20.9267, 55.5981],
-  'Saint-Benoît':   [-21.0347, 55.7169],
-  'Saint-Leu':      [-21.1531, 55.2847],
-  'Cilaos':         [-21.1367, 55.4767],
-  'Salazie':        [-21.0264, 55.5408],
-  'Bras-Panon':     [-21.0083, 55.6928],
-  'La Plaine-des-Palmistes': [-21.1167, 55.6167],
-  'Petite-Île':     [-21.3625, 55.5611],
-  'Entre-Deux':     [-21.2167, 55.4667],
-  'Saint-Joseph':   [-21.3833, 55.6167],
-  'Trois-Bassins':  [-21.1000, 55.2833],
-  'La Possession':  [-20.9329, 55.3357],
-  'Le Port':        [-20.9356, 55.3097],
-  'Les Avirons':    [-21.2167, 55.3167],
-  "L'Étang-Salé":  [-21.2667, 55.3667],
-  'Saint-Philippe': [-21.3597, 55.7706],
-};
+// COMMUNES_COORDS is defined in components.jsx and exported to window
 
 const getCoords = (commune) => {
   if (!commune) return null;

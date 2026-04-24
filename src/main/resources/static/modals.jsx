@@ -79,9 +79,9 @@ const VehiculeModal = ({ vehicule, defaultType = 'trotinette', onSave, onClose }
   };
 
   const typeOptions = [
-    { value: 'trotinette', label: '▷ Trottinette' },
-    { value: 'velo',       label: '◷ Vélo' },
-    { value: 'scooter',    label: '◈ Scooter' },
+    { value: 'trotinette', label: '🛴 Trottinette' },
+    { value: 'velo',       label: '🚲 Vélo' },
+    { value: 'scooter',    label: '🛵 Scooter' },
   ];
 
   // Inline toggle for boolean fields
@@ -127,8 +127,13 @@ const VehiculeModal = ({ vehicule, defaultType = 'trotinette', onSave, onClose }
           value={form.etatBatterie} onChange={e => setForm(p => ({ ...p, etatBatterie: e.target.value }))} />
       </FieldGroup>
       <FieldGroup>
-        <FloatInput label="Commune" sub="· Komin"
-          value={form.commune} onChange={e => setForm(p => ({ ...p, commune: e.target.value }))} />
+        <FloatSelect label="Commune" sub="· Komin"
+          value={form.commune} onChange={e => setForm(p => ({ ...p, commune: e.target.value }))}>
+          <option value="">— Sélectionner —</option>
+          {Object.keys(COMMUNES_COORDS).map(k => (
+            <option key={k} value={k}>{k}</option>
+          ))}
+        </FloatSelect>
       </FieldGroup>
       {/* Type-specific fields */}
       {(form.type === 'trotinette') && (
