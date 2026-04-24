@@ -57,6 +57,7 @@ public class ScooterController {
                 .map(existingScooter -> {
                     existingScooter.setCommune(scooter.getCommune());
                     existingScooter.setEtatBatterie(scooter.getEtatBatterie());
+                    existingScooter.setCoffre(scooter.isCoffre());
 
                     Scooter updatedScooter = scooterRepository.save(existingScooter);
                     return ResponseEntity.ok(updatedScooter);
