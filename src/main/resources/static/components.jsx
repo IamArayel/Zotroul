@@ -54,22 +54,10 @@ const NAV_ITEMS = [
   { id: 'carte',        labelFR: 'Carte',             labelKR: 'Kart',         icon: '◌' },
 ];
 
-const Sidebar = ({ active, onNav, lang }) => {
-  const nm = (style) => ({
-    background: '#e0d9d0',
-    boxShadow: style === 'inset'
-      ? 'inset 4px 4px 10px #c5bfb6, inset -4px -4px 10px #f5ede4'
-      : '5px 5px 12px #c5bfb6, -5px -5px 12px #f5ede4',
-    borderRadius: 16,
-    ...( style === 'active' ? { boxShadow: 'inset 4px 4px 10px #c5bfb6, inset -4px -4px 10px #f5ede4' } : {} ),
-  });
-
+const Sidebar = ({ active, onNav, lang, isOpen = false, onClose = () => {} }) => {
   return (
-    <aside style={{
-      width: 240, minHeight: '100vh', background: '#e0d9d0',
-      display: 'flex', flexDirection: 'column', padding: '28px 18px',
-      boxShadow: '6px 0 20px #c5bfb6', flexShrink: 0,
-    }}>
+    <aside className={`sidebar${isOpen ? ' open' : ''}`}>
+      <button className="sidebar-close-btn" onClick={onClose}>×</button>
       {/* Logo */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 36, padding: '0 6px' }}>
         <img src="Logo.png" alt="Zotroul" style={{ width: 44, height: 44, objectFit: 'contain', borderRadius: 12 }} />
@@ -197,7 +185,7 @@ const BtnGhost = ({ children, danger = false, style = {}, small = false, ...prop
 
 // Page header
 const PageHeader = ({ title, subtitle, action }) => (
-  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
+  <div className="page-header">
     <div>
       <h1 style={{ margin: 0, fontSize: 26, fontWeight: 700, color: '#3a3128', letterSpacing: '-0.5px' }}>{title}</h1>
       {subtitle && <p style={{ margin: '4px 0 0', fontSize: 13, color: '#9e8e80' }}>{subtitle}</p>}

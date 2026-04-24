@@ -23,6 +23,11 @@ const COMMUNES_COORDS = {
   'Entre-Deux':     [-21.2167, 55.4667],
   'Saint-Joseph':   [-21.3833, 55.6167],
   'Trois-Bassins':  [-21.1000, 55.2833],
+  'La Possession':  [-20.9329, 55.3357],
+  'Le Port':        [-20.9356, 55.3097],
+  'Les Avirons':    [-21.2167, 55.3167],
+  "L'Étang-Salé":  [-21.2667, 55.3667],
+  'Saint-Philippe': [-21.3597, 55.7706],
 };
 
 const getCoords = (commune) => {
@@ -155,7 +160,7 @@ const CarteView = () => {
   return (
     <div>
       <PageHeader title="Carte des véhicules" subtitle="Kart véhikil — Localisation par commune" />
-      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: 20, height: 580 }}>
+      <div className="carte-grid">
         {/* Sidebar list */}
         <NCard style={{ padding: '16px 12px', overflowY: 'auto' }}>
           <div style={{ fontWeight: 600, color: '#3a3128', fontSize: 14, marginBottom: 14, padding: '0 6px' }}>

@@ -14,6 +14,7 @@ const ModalShell = ({ title, subtitle, onClose, children, width = 480 }) => (
       background: '#e0d9d0', borderRadius: 22, width, maxWidth: '95vw',
       boxShadow: '12px 12px 30px #c5bfb6, -12px -12px 30px #f5ede4',
       padding: '30px 32px', animation: 'modalIn .22s ease',
+      maxHeight: '90vh', overflowY: 'auto',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
         <div>
@@ -246,7 +247,7 @@ const SessionModal = ({ session, utilisateurs, vehicules, onSave, onClose }) => 
     <ModalShell title={isEdit ? 'Modifier la session' : 'Ajouter une session'}
       subtitle={isEdit ? `Chanj sésion #${session.id}` : 'Nouvo sésion'}
       onClose={onClose} width={520}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
+      <div className="session-dates-grid">
         <FieldGroup>
           <FloatInput label="Date de début" sub="· Dat dépar"
             type="datetime-local" value={form.dateDebut} onChange={e => setForm(p => ({ ...p, dateDebut: e.target.value }))} />
