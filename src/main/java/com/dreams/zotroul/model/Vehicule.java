@@ -14,12 +14,13 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToMany;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Vehicule.class)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Vehicule {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Float etatBatterie;
