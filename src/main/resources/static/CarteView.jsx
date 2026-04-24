@@ -184,7 +184,7 @@ const CarteView = () => {
                 <div style={{ height: 6, borderRadius: 3, background: '#d0c9c0', overflow: 'hidden' }}>
                   <div style={{ width: `${avg}%`, height: '100%', background: color, borderRadius: 3 }} />
                 </div>
-                <div style={{ fontSize: 11, color, fontWeight: 600, marginTop: 4 }}>Batri moy. {avg.toFixed(0)}%</div>
+                {/* <div style={{ fontSize: 11, color, fontWeight: 600, marginTop: 4 }}>Batri moy. {avg.toFixed(0)}%</div> */}
               </button>
             );
           })}
