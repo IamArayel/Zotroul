@@ -3,6 +3,7 @@ package com.dreams.zotroul.controller;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +22,14 @@ public class UtilisateurController {
     }
 
     // Récupérer tous les utilisateurs
+    @Operation(summary = "Lister les utilisateurs", description = "Retourne la liste de tous les utilisateurs.")
     @GetMapping
     public List<Utilisateur> getAll() {
         return utilisateurRepository.findAll();
     }
 
     // Récupérer un utilisateur par son ID
+    @Operation(summary = "Recuperer un utilisateur", description = "Retourne un utilisateur a partir de son identifiant.")
     @GetMapping("/{id}")
     public ResponseEntity<Utilisateur> getById(@PathVariable Long id) {
         return utilisateurRepository.findById(id)
@@ -46,6 +49,7 @@ public class UtilisateurController {
     }
 
     // Créer un nouvel utilisateur
+    @Operation(summary = "Creer un utilisateur", description = "Cree un nouvel utilisateur apres validation des donnees envoyees.")
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Utilisateur utilisateur) {
         if (utilisateur.getUsername() == null || utilisateur.getUsername().isBlank()) {
@@ -65,6 +69,7 @@ public class UtilisateurController {
     }
 
     // Mettre à jour un utilisateur existant
+    @Operation(summary = "Modifier un utilisateur", description = "Met a jour un utilisateur existant a partir de son identifiant.")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Utilisateur utilisateur) {
         return utilisateurRepository.findById(id).map(existing -> {
@@ -86,6 +91,7 @@ public class UtilisateurController {
     }
 
     // Supprimer un utilisateur par son ID
+    @Operation(summary = "Supprimer un utilisateur", description = "Supprime un utilisateur a partir de son identifiant.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (!utilisateurRepository.existsById(id)) {

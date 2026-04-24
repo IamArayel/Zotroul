@@ -2,6 +2,7 @@ package com.dreams.zotroul.controller;
 
 import com.dreams.zotroul.model.Vehicule;
 import com.dreams.zotroul.repository.VehiculeRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +20,14 @@ public class VehiculeController {
     }
 
     // Retourne la liste de tous les véhicules
+    @Operation(summary = "Lister les vehicules", description = "Retourne la liste de tous les vehicules.")
     @GetMapping
     public List<Vehicule> getAll() {
         return vehiculeRepository.findAll();
     }
 
     // Retourne un véhicule par son identifiant, 404 s'il n'existe pas
+    @Operation(summary = "Recuperer un vehicule", description = "Retourne un vehicule a partir de son identifiant.")
     @GetMapping("/{id}")
     public ResponseEntity<Vehicule> getById(@PathVariable Long id) {
         return vehiculeRepository.findById(id)
@@ -33,12 +36,14 @@ public class VehiculeController {
     }
 
     // Crée un nouveau véhicule et retourne 201 avec la ressource créée
+    @Operation(summary = "Creer un vehicule", description = "Cree un nouveau vehicule avec les donnees envoyees.")
     @PostMapping
     public ResponseEntity<Vehicule> create(@RequestBody Vehicule vehicule) {
         return ResponseEntity.status(HttpStatus.CREATED).body(vehiculeRepository.save(vehicule));
     }
 
     // Met à jour un véhicule existant, 404 s'il n'existe pas
+    @Operation(summary = "Modifier un vehicule", description = "Met a jour un vehicule existant a partir de son identifiant.")
     @PutMapping("/{id}")
     public ResponseEntity<Vehicule> update(@PathVariable Long id, @RequestBody Vehicule vehicule) {
         if (!vehiculeRepository.existsById(id)) {
@@ -49,6 +54,7 @@ public class VehiculeController {
     }
 
     // Supprime un véhicule par son identifiant, 404 s'il n'existe pas
+    @Operation(summary = "Supprimer un vehicule", description = "Supprime un vehicule a partir de son identifiant.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (!vehiculeRepository.existsById(id)) {
