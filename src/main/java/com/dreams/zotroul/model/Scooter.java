@@ -4,18 +4,18 @@ import jakarta.persistence.Entity;
 
 @Entity
 public class Scooter extends Vehicule {
-    private boolean panier;
+    private boolean coffre;
 
     public Scooter() {
         super();
     }
 
-    public boolean isPanier() {
-        return panier;
+    public boolean isCoffre() {
+        return coffre;
     }
 
-    public void setPanier(boolean panier) {
-        this.panier = panier;
+    public void setCoffre(boolean coffre) {
+        this.coffre = coffre;
     }
 
 }
