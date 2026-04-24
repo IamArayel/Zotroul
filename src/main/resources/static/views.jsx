@@ -107,9 +107,9 @@ const DashboardView = () => {
    VÉHICULES VIEW — fetches from 3 typed APIs
 ═══════════════════════════════════════════════════════════ */
 const TYPE_DEFS = [
-  { key: 'trotinette', labelFR: 'Trottinettes', labelKR: 'Trotinet', icon: '▷', color: '#44adfd' },
-  { key: 'velo',       labelFR: 'Vélos',         labelKR: 'Vélo',     icon: '◷', color: '#8b5cf6' },
-  { key: 'scooter',    labelFR: 'Scooters',      labelKR: 'Skoutèr',  icon: '◈', color: '#f59e0b' },
+  { key: 'trotinette', labelFR: 'Trottinettes', labelKR: 'Trotinet', icon: '🛴', color: '#44adfd' },
+  { key: 'velo',       labelFR: 'Vélos',         labelKR: 'Vélo',     icon: '🚲', color: '#8b5cf6' },
+  { key: 'scooter',    labelFR: 'Scooters',      labelKR: 'Skoutèr',  icon: '🛵', color: '#f59e0b' },
 ];
 
 const VehiculesView = () => {
