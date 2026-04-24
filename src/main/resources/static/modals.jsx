@@ -14,6 +14,7 @@ const ModalShell = ({ title, subtitle, onClose, children, width = 480 }) => (
       background: '#e0d9d0', borderRadius: 22, width, maxWidth: '95vw',
       boxShadow: '12px 12px 30px #c5bfb6, -12px -12px 30px #f5ede4',
       padding: '30px 32px', animation: 'modalIn .22s ease',
+      maxHeight: '90vh', overflowY: 'auto',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
         <div>
@@ -78,9 +79,9 @@ const VehiculeModal = ({ vehicule, defaultType = 'trotinette', onSave, onClose }
   };
 
   const typeOptions = [
-    { value: 'trotinette', label: '▷ Trottinette' },
-    { value: 'velo',       label: '◷ Vélo' },
-    { value: 'scooter',    label: '◈ Scooter' },
+    { value: 'trotinette', label: '🛴 Trottinette' },
+    { value: 'velo',       label: '🚲 Vélo' },
+    { value: 'scooter',    label: '🛵 Scooter' },
   ];
 
   // Inline toggle for boolean fields
@@ -126,8 +127,13 @@ const VehiculeModal = ({ vehicule, defaultType = 'trotinette', onSave, onClose }
           value={form.etatBatterie} onChange={e => setForm(p => ({ ...p, etatBatterie: e.target.value }))} />
       </FieldGroup>
       <FieldGroup>
-        <FloatInput label="Commune" sub="· Komin"
-          value={form.commune} onChange={e => setForm(p => ({ ...p, commune: e.target.value }))} />
+        <FloatSelect label="Commune" sub="· Komin"
+          value={form.commune} onChange={e => setForm(p => ({ ...p, commune: e.target.value }))}>
+          <option value=""></option>
+          {Object.keys(COMMUNES_COORDS).map(k => (
+            <option key={k} value={k}>{k}</option>
+          ))}
+        </FloatSelect>
       </FieldGroup>
       {/* Type-specific fields */}
       {(form.type === 'trotinette') && (
@@ -246,7 +252,7 @@ const SessionModal = ({ session, utilisateurs, vehicules, onSave, onClose }) => 
     <ModalShell title={isEdit ? 'Modifier la session' : 'Ajouter une session'}
       subtitle={isEdit ? `Chanj sésion #${session.id}` : 'Nouvo sésion'}
       onClose={onClose} width={520}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
+      <div className="session-dates-grid">
         <FieldGroup>
           <FloatInput label="Date de début" sub="· Dat dépar"
             type="datetime-local" value={form.dateDebut} onChange={e => setForm(p => ({ ...p, dateDebut: e.target.value }))} />
@@ -263,14 +269,14 @@ const SessionModal = ({ session, utilisateurs, vehicules, onSave, onClose }) => 
       <FieldGroup>
         <FloatSelect label="Utilisateur" sub="· Utilizatèr"
           value={form.utilisateurId} onChange={e => setForm(p => ({ ...p, utilisateurId: e.target.value }))}>
-          <option value="">— Sélectionner —</option>
+          <option value=""></option>
           {utilisateurs.map(u => <option key={u.id} value={u.id}>#{u.id} · {u.username}</option>)}
         </FloatSelect>
       </FieldGroup>
       <FieldGroup>
         <FloatSelect label="Véhicule" sub="· Véhikil"
           value={form.vehiculeId} onChange={e => setForm(p => ({ ...p, vehiculeId: e.target.value }))}>
-          <option value="">— Sélectionner —</option>
+          <option value=""></option>
           {vehicules.map(v => <option key={v.id} value={v.id}>#{v.id} · {v.commune} ({(v.etatBatterie||0).toFixed(0)}%)</option>)}
         </FloatSelect>
       </FieldGroup>

@@ -45,7 +45,7 @@ const DashboardView = () => {
       <PageHeader title="Tableau de bord" subtitle="Tablodbòr — Zéstion la flòt" />
 
       {/* KPIs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 28 }}>
+      <div className="kpi-grid">
         <KpiCard label="Véhicules" sublabel="Véhikil" value={vehicules.length} color="#1a6bff" sub={`Batterie moy. ${avgBattery.toFixed(0)}%`} />
         <KpiCard label="Utilisateurs" sublabel="Itilizatèr" value={utilisateurs.length} color="#8b5cf6" />
         <KpiCard label="Sessions" sublabel="Sésion" value={sessions.length} color="#10b981" sub={`${sessions.length} total`} />
@@ -53,7 +53,7 @@ const DashboardView = () => {
       </div>
 
       {/* 2-col row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+      <div className="two-col-grid">
         {/* Véhicules par commune */}
         <NCard>
           <div style={{ fontWeight: 600, color: '#3a3128', marginBottom: 16, fontSize: 15 }}>Véhicules par commune <span style={{ fontSize: 11, color: '#9e8e80' }}>· Véhikil par komin</span></div>
@@ -169,7 +169,7 @@ const VehiculesView = () => {
         action={<BtnBlue onClick={() => setModal({ type: 'create' })}>+ Ajouter · Azout</BtnBlue>} />
 
       {/* Type filter chips */}
-      <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+      <div className="type-chips">
         {TYPE_DEFS.map(td => {
           const on = activeTypes[td.key];
           return (

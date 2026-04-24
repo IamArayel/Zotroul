@@ -101,6 +101,80 @@
     .float-field--icon > label { left: 36px; }
     .float-field--icon > input:focus + label,
     .float-field--icon > input:not(:placeholder-shown) + label { left: 14px; }
+
+    /* ─── Responsive layout classes ─── */
+    .main-content {
+      flex: 1; min-height: 100vh; overflow-y: auto; min-width: 0;
+      padding: 36px 40px;
+    }
+    .kpi-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 28px;
+    }
+    .two-col-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;
+    }
+    .type-chips {
+      display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .session-dates-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px;
+    }
+    .carte-grid {
+      display: grid; grid-template-columns: 260px 1fr; gap: 20px; height: 580px;
+    }
+    .page-header {
+      display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px; min-height: 100vh; background: #e0d9d0;
+      display: flex; flex-direction: column; padding: 28px 18px;
+      box-shadow: 6px 0 20px #c5bfb6; flex-shrink: 0;
+      z-index: 999; transition: transform .3s ease;
+    }
+    .sidebar-close-btn {
+      background: #e0d9d0; border: none; border-radius: 10px;
+      width: 32px; height: 32px; cursor: pointer; font-size: 20px; line-height: 1;
+      color: #9e8e80; box-shadow: 3px 3px 8px #c5bfb6, -3px -3px 8px #f5ede4;
+      align-self: flex-end; margin-bottom: 8px; flex-shrink: 0; display: none;
+    }
+    .hamburger-btn { display: none; }
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(58,49,40,.4); z-index: 998;
+      backdrop-filter: blur(2px); cursor: pointer;
+    }
+    .sidebar-overlay.open { display: block; }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed; top: 0; left: 0; height: 100vh; min-height: unset;
+        width: 260px; transform: translateX(-100%);
+      }
+      .sidebar.open { transform: translateX(0); box-shadow: 8px 0 32px #c5bfb6; }
+      .sidebar-close-btn { display: flex; align-items: center; justify-content: center; }
+      .hamburger-btn {
+        display: flex; align-items: center; justify-content: center;
+        position: fixed; top: 16px; left: 16px; z-index: 997;
+        background: #e0d9d0; border: none; border-radius: 10px;
+        width: 40px; height: 40px; cursor: pointer; font-size: 20px; color: #3a3128;
+        box-shadow: 4px 4px 10px #c5bfb6, -4px -4px 10px #f5ede4;
+      }
+      .main-content { padding: 68px 16px 24px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .two-col-grid { grid-template-columns: 1fr; }
+      .page-header { flex-direction: column; gap: 12px; }
+      .carte-grid { grid-template-columns: 1fr; height: auto; }
+      .carte-grid > :first-child { max-height: 200px; overflow-y: auto; }
+      .carte-grid > :last-child { height: 380px; }
+    }
+
+    @media (max-width: 480px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+      .session-dates-grid { grid-template-columns: 1fr; gap: 0; }
+      .main-content { padding: 68px 12px 20px; }
+    }
   </style>
 </head>
 <body>
@@ -136,11 +210,13 @@
     const App = () => {
       const [page, setPage] = React.useState('dashboard');
       const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+      const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
-      // Apply accent color as CSS variable
       React.useEffect(() => {
         document.documentElement.style.setProperty('--blue', tweaks.accentColor);
       }, [tweaks.accentColor]);
+
+      const handleNav = (p) => { setPage(p); setSidebarOpen(false); };
 
       const views = {
         dashboard:    <DashboardView />,
@@ -154,18 +230,18 @@
         <>
           <ToastContainer />
 
+          <div className={`sidebar-overlay${sidebarOpen ? ' open' : ''}`} onClick={() => setSidebarOpen(false)} />
+          <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>☰</button>
+
           <Sidebar
             active={page}
-            onNav={setPage}
+            onNav={handleNav}
             lang={tweaks.lang}
+            isOpen={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
           />
 
-          <main style={{
-            flex: 1,
-            padding: '36px 40px',
-            minHeight: '100vh',
-            overflowY: 'auto',
-          }}>
+          <main className="main-content">
             {views[page] || <DashboardView />}
           </main>
 

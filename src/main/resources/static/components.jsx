@@ -54,22 +54,10 @@ const NAV_ITEMS = [
   { id: 'carte',        labelFR: 'Carte',             labelKR: 'Kart',         icon: '◌' },
 ];
 
-const Sidebar = ({ active, onNav, lang }) => {
-  const nm = (style) => ({
-    background: '#e0d9d0',
-    boxShadow: style === 'inset'
-      ? 'inset 4px 4px 10px #c5bfb6, inset -4px -4px 10px #f5ede4'
-      : '5px 5px 12px #c5bfb6, -5px -5px 12px #f5ede4',
-    borderRadius: 16,
-    ...( style === 'active' ? { boxShadow: 'inset 4px 4px 10px #c5bfb6, inset -4px -4px 10px #f5ede4' } : {} ),
-  });
-
+const Sidebar = ({ active, onNav, lang, isOpen = false, onClose = () => {} }) => {
   return (
-    <aside style={{
-      width: 240, minHeight: '100vh', background: '#e0d9d0',
-      display: 'flex', flexDirection: 'column', padding: '28px 18px',
-      boxShadow: '6px 0 20px #c5bfb6', flexShrink: 0,
-    }}>
+    <aside className={`sidebar${isOpen ? ' open' : ''}`}>
+      <button className="sidebar-close-btn" onClick={onClose}>×</button>
       {/* Logo */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 36, padding: '0 6px' }}>
         <img src="Logo.png" alt="Zotroul" style={{ width: 44, height: 44, objectFit: 'contain', borderRadius: 12 }} />
@@ -197,7 +185,7 @@ const BtnGhost = ({ children, danger = false, style = {}, small = false, ...prop
 
 // Page header
 const PageHeader = ({ title, subtitle, action }) => (
-  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
+  <div className="page-header">
     <div>
       <h1 style={{ margin: 0, fontSize: 26, fontWeight: 700, color: '#3a3128', letterSpacing: '-0.5px' }}>{title}</h1>
       {subtitle && <p style={{ margin: '4px 0 0', fontSize: 13, color: '#9e8e80' }}>{subtitle}</p>}
@@ -305,14 +293,42 @@ const VehicleTypes = {
   TYPES:    { trottinettes: 'trottinette', velos: 'velo', scooters: 'scooter' },
   LABELS:   { trottinette: 'Trottinette', velo: 'Vélo', scooter: 'Scooter' },
   LABELS_KR:{ trottinette: 'Trotinet', velo: 'Vélo', scooter: 'Skoutèr' },
-  ICONS:    { trottinette: '▷', velo: '◷', scooter: '◈' },
+  ICONS:    { trottinette: '🛴', velo: '🚲', scooter: '🛵' },
   get: (id) => localStorage.getItem(`zt_vtype_${id}`) || 'trottinette',
   set: (id, type) => localStorage.setItem(`zt_vtype_${id}`, type),
+};
+
+// Canonical list of the 24 communes of La Réunion (shared by modals + CarteView)
+const COMMUNES_COORDS = {
+  'Bras-Panon':              [-21.0083, 55.6928],
+  'Cilaos':                  [-21.1367, 55.4767],
+  'Entre-Deux':              [-21.2167, 55.4667],
+  "L'Étang-Salé":           [-21.2667, 55.3667],
+  'La Plaine-des-Palmistes': [-21.1167, 55.6167],
+  'La Possession':           [-20.9329, 55.3357],
+  'Le Port':                 [-20.9356, 55.3097],
+  'Le Tampon':               [-21.2729, 55.5150],
+  'Les Avirons':             [-21.2167, 55.3167],
+  'Petite-Île':              [-21.3625, 55.5611],
+  'Saint-André':             [-20.9644, 55.6483],
+  'Saint-Benoît':            [-21.0347, 55.7169],
+  'Saint-Denis':             [-20.8789, 55.4481],
+  'Saint-Joseph':            [-21.3833, 55.6167],
+  'Saint-Leu':               [-21.1531, 55.2847],
+  'Saint-Louis':             [-21.2699, 55.4103],
+  'Saint-Paul':              [-21.0052, 55.2699],
+  'Saint-Philippe':          [-21.3597, 55.7706],
+  'Saint-Pierre':            [-21.3411, 55.4771],
+  'Sainte-Marie':            [-20.9000, 55.5333],
+  'Sainte-Rose':             [-21.1289, 55.7944],
+  'Sainte-Suzanne':          [-20.9267, 55.5981],
+  'Salazie':                 [-21.0264, 55.5408],
+  'Trois-Bassins':           [-21.1000, 55.2833],
 };
 
 Object.assign(window, {
   useToast, ToastContainer, Sidebar,
   NCard, NInput, NSelect, FloatInput, FloatSelect, BtnBlue, BtnGhost,
   PageHeader, SearchBar, BatteryBar, KpiCard,
-  Spinner, ErrorMsg, NTable, VehicleTypes,
+  Spinner, ErrorMsg, NTable, VehicleTypes, COMMUNES_COORDS,
 });
