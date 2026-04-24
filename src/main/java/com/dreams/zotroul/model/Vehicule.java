@@ -16,7 +16,6 @@ import jakarta.persistence.OneToMany;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Vehicule.class)
 @Inheritance(strategy = InheritanceType.JOINED)
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Vehicule {
 
     @Id
