@@ -45,7 +45,7 @@ public class UtilisateurController {
         }
         if (utilisateurRepository.existsByNumeroTelephone(utilisateur.getNumeroTelephone())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("message", "numeroTelephone deja utilise"));
+                    .body(Map.of("message", "numeroTelephone déjà utilisé"));
         }
 
         utilisateur.setId(null);
