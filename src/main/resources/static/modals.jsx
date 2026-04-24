@@ -129,7 +129,7 @@ const VehiculeModal = ({ vehicule, defaultType = 'trotinette', onSave, onClose }
       <FieldGroup>
         <FloatSelect label="Commune" sub="· Komin"
           value={form.commune} onChange={e => setForm(p => ({ ...p, commune: e.target.value }))}>
-          <option value="">— Sélectionner —</option>
+          <option value=""></option>
           {Object.keys(COMMUNES_COORDS).map(k => (
             <option key={k} value={k}>{k}</option>
           ))}
