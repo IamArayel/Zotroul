@@ -42,7 +42,7 @@ public class UtilisateurController {
         }
         if (utilisateurRepository.existsByUsername(utilisateur.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("message", "username deja utilise"));
+                    .body(Map.of("message", "username déjà utilisé"));
         }
         utilisateur.setId(null); // sécurité : on ne laisse pas le client imposer un ID
         Utilisateur saved = utilisateurRepository.save(utilisateur);
@@ -58,12 +58,14 @@ public class UtilisateurController {
                     && !utilisateur.getUsername().equals(existing.getUsername())
                     && utilisateurRepository.existsByUsername(utilisateur.getUsername())) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body(Map.of("message", "username deja utilise"));
+                        .body(Map.of("message", "username déjà utilisé"));
             }
             if (utilisateur.getUsername() != null && !utilisateur.getUsername().isBlank()) {
                 existing.setUsername(utilisateur.getUsername());
             }
-            existing.setNumeroTelephone(utilisateur.getNumeroTelephone());
+            if (utilisateur.getNumeroTelephone() != null) {
+                existing.setNumeroTelephone(utilisateur.getNumeroTelephone());
+            }
             Utilisateur saved = utilisateurRepository.save(existing);
             return ResponseEntity.ok(saved);
         }).orElseGet(() -> ResponseEntity.notFound().build());
