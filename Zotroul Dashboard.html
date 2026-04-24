@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zotroul — Dashboard Admin</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #e0d9d0;
+      --shadow-d:  #c5bfb6;
+      --shadow-l:  #f5ede4;
+      --text:      #3a3128;
+      --text-2:    #7d736a;
+      --text-3:    #9e8e80;
+      --blue:      #1a6bff;
+      --blue-2:    #2979ff;
+      --green:     #22c55e;
+      --amber:     #f59e0b;
+      --red:       #ef4444;
+      --purple:    #8b5cf6;
+    }
+
+    html, body { height: 100%; background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); }
+
+    #root { display: flex; min-height: 100vh; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--shadow-d); border-radius: 3px; }
+
+    /* Animations */
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(24px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(16px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Leaflet popup */
+    .zotroul-popup .leaflet-popup-content-wrapper {
+      background: #e0d9d0;
+      box-shadow: 6px 6px 16px #c5bfb6, -4px -4px 12px #f5ede4;
+      border-radius: 14px;
+      border: none;
+    }
+    .zotroul-popup .leaflet-popup-tip { background: #e0d9d0; }
+    .zotroul-popup .leaflet-popup-content { margin: 14px 16px; }
+
+    /* Button hover states */
+    button:active { transform: scale(.97); }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- API service -->
+  <script src="api.js"></script>
+
+  <!-- Tweaks panel -->
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+
+  <!-- Components -->
+  <script type="text/babel" src="components.jsx"></script>
+
+  <!-- Modals -->
+  <script type="text/babel" src="modals.jsx"></script>
+
+  <!-- Views -->
+  <script type="text/babel" src="views.jsx"></script>
+
+  <!-- Carte view (Leaflet) -->
+  <script type="text/babel" src="CarteView.jsx"></script>
+
+  <!-- Main App -->
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "accentColor": "#44adfd",
+      "sidebarWidth": 240,
+      "tableDensity": "comfortable",
+      "lang": "kr"
+    }/*EDITMODE-END*/;
+
+    const App = () => {
+      const [page, setPage] = React.useState('dashboard');
+      const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+      // Apply accent color as CSS variable
+      React.useEffect(() => {
+        document.documentElement.style.setProperty('--blue', tweaks.accentColor);
+      }, [tweaks.accentColor]);
+
+      const views = {
+        dashboard:    <DashboardView />,
+        vehicules:    <VehiculesView />,
+        utilisateurs: <UtilisateursView />,
+        sessions:     <SessionsView />,
+        carte:        <CarteView />,
+      };
+
+      return (
+        <>
+          <ToastContainer />
+
+          <Sidebar
+            active={page}
+            onNav={setPage}
+            lang={tweaks.lang}
+          />
+
+          <main style={{
+            flex: 1,
+            padding: '36px 40px',
+            minHeight: '100vh',
+            overflowY: 'auto',
+          }}>
+            {views[page] || <DashboardView />}
+          </main>
+
+          <TweaksPanel>
+            <TweakSection label="Apparence · Aparans" />
+            <TweakColor
+              label="Couleur accent · Koulèr aksan"
+              value={tweaks.accentColor}
+              onChange={v => setTweak('accentColor', v)}
+            />
+            <TweakSelect
+              label="Densité tableau · Dansite tab"
+              value={tweaks.tableDensity}
+              options={['comfortable', 'compact']}
+              onChange={v => setTweak('tableDensity', v)}
+            />
+            <TweakSection label="Langue · Lang" />
+            <TweakRadio
+              label="Interface"
+              value={tweaks.lang}
+              options={['fr', 'kr']}
+              onChange={v => setTweak('lang', v)}
+            />
+          </TweaksPanel>
+        </>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
