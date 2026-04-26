@@ -1,6 +1,35 @@
 // views.jsx — Dashboard, VehiculesView, UtilisateursView, SessionsView
 // Exports to window: { DashboardView, VehiculesView, UtilisateursView, SessionsView }
 
+const findById = (items, ref) => {
+  const id = typeof ref === 'number' || typeof ref === 'string' ? Number(ref) : ref?.id;
+  if (!id) return null;
+  return items.find((item) => Number(item?.id) === id) || null;
+};
+
+const resolveSessionUtilisateur = (session, utilisateurs) => {
+  const direct = session?.utilisateur;
+  if (direct?.username) return direct;
+  return findById(utilisateurs, direct) || direct || null;
+};
+
+const resolveSessionVehicule = (session, vehicules) => {
+  const direct = session?.vehicule;
+  if (direct?.commune) return direct;
+  return findById(vehicules, direct) || direct || null;
+};
+
+const getUtilisateurLabel = (session, utilisateurs) => resolveSessionUtilisateur(session, utilisateurs)?.username || '—';
+
+const getVehiculeLabel = (session, vehicules) => {
+  const vehicule = resolveSessionVehicule(session, vehicules);
+  if (!vehicule?.id) return '—';
+  return `#${vehicule.id} · ${vehicule.commune || '—'}`;
+};
+
+const isRenderableUser = (user) => !!user && user.id != null;
+const isRenderableSession = (session) => !!session && session.id != null;
+
 /* ═══════════════════════════════════════════════════════════
    DASHBOARD
 ═══════════════════════════════════════════════════════════ */
@@ -23,7 +52,11 @@ const DashboardView = () => {
           ]),
         SessionAPI.getAll(),
       ]);
-      setData({ utilisateurs: u || [], vehicules: v || [], sessions: s || [] });
+      setData({
+        utilisateurs: (u || []).filter(isRenderableUser),
+        vehicules: (v || []).filter((item) => item?.id != null),
+        sessions: (s || []).filter(isRenderableSession),
+      });
     } catch (e) { setError(e.message); toast.error('Connexion au backend échouée'); }
     setLoading(false);
   };
@@ -90,8 +123,8 @@ const DashboardView = () => {
         <NTable
           cols={[
             { label: '#', render: r => <span style={{ color: '#1a6bff', fontWeight: 600 }}>#{r.id}</span> },
-            { label: 'Utilisateur · Utilizatèr', render: r => r.utilisateur?.username || '—' },
-            { label: 'Véhicule · Véhikil', render: r => r.vehicule ? `#${r.vehicule.id} · ${r.vehicule.commune}` : '—' },
+            { label: 'Utilisateur · Utilizatèr', render: r => getUtilisateurLabel(r, utilisateurs) },
+            { label: 'Véhicule · Véhikil', render: r => getVehiculeLabel(r, vehicules) },
             { label: 'Début · Dépar', render: r => r.dateDebut ? new Date(r.dateDebut).toLocaleString('fr-FR') : '—' },
             { label: 'Prix · Pri', render: r => r.prix != null ? <span style={{ fontWeight: 600, color: '#f59e0b' }}>{r.prix.toFixed(2)} €</span> : '—' },
           ]}
@@ -264,7 +297,7 @@ const UtilisateursView = () => {
 
   const load = async () => {
     setLoading(true); setError('');
-    try { setItems(await UtilisateurAPI.getAll() || []); }
+    try { setItems((await UtilisateurAPI.getAll() || []).filter(isRenderableUser)); }
     catch (e) { setError(e.message); }
     setLoading(false);
   };
@@ -300,7 +333,7 @@ const UtilisateursView = () => {
           <NTable
             cols={[
               { label: 'ID', render: r => <span style={{ color: '#1a6bff', fontWeight: 700 }}>#{r.id}</span> },
-              { label: 'Username · Non', render: r => <span style={{ fontWeight: 600, color: '#3a3128' }}>{r.username}</span> },
+              { label: 'Username · Non', render: r => <span style={{ fontWeight: 600, color: '#3a3128' }}>{r.username || '—'}</span> },
               { label: 'Téléphone · Téléfòn', render: r => r.numeroTelephone || <span style={{ color: '#c0b0a0' }}>—</span> },
               { label: 'Sessions · Sésion', render: r => <span style={{ color: '#8b5cf6', fontWeight: 600 }}>{r.sessions?.length ?? 0}</span> },
               {
@@ -351,9 +384,9 @@ const SessionsView = () => {
         UtilisateurAPI.getAll(),
         VehiculeAPI.getAll(),
       ]);
-      setItems(s || []);
-      setUtilisateurs(u || []);
-      setVehicules(v || []);
+      setItems((s || []).filter(isRenderableSession));
+      setUtilisateurs((u || []).filter(isRenderableUser));
+      setVehicules((v || []).filter((item) => item?.id != null));
     } catch (e) { setError(e.message); }
     setLoading(false);
   };
@@ -382,8 +415,8 @@ const SessionsView = () => {
 
   const filtered = items.filter(s =>
     String(s.id).includes(search) ||
-    (s.utilisateur?.username || '').toLowerCase().includes(search.toLowerCase()) ||
-    (s.vehicule?.commune || '').toLowerCase().includes(search.toLowerCase())
+    getUtilisateurLabel(s, utilisateurs).toLowerCase().includes(search.toLowerCase()) ||
+    getVehiculeLabel(s, vehicules).toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -396,8 +429,8 @@ const SessionsView = () => {
           <NTable
             cols={[
               { label: '#', render: r => <span style={{ color: '#1a6bff', fontWeight: 700 }}>#{r.id}</span> },
-              { label: 'Utilisateur · Utilizatèr', render: r => r.utilisateur?.username || '—' },
-              { label: 'Véhicule · Véhikil', render: r => r.vehicule ? `#${r.vehicule.id} · ${r.vehicule.commune}` : '—' },
+              { label: 'Utilisateur · Utilizatèr', render: r => getUtilisateurLabel(r, utilisateurs) },
+              { label: 'Véhicule · Véhikil', render: r => getVehiculeLabel(r, vehicules) },
               { label: 'Début · Dépar', render: r => fmtDate(r.dateDebut) },
               { label: 'Fin · La fin', render: r => fmtDate(r.dateFin) },
               { label: 'Durée', render: r => duration(r.dateDebut, r.dateFin) },
